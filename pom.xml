@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<vaadin.version>24.3.2</vaadin.version>
+		<proj4j.version>1.2.2</proj4j.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -38,6 +39,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.locationtech.proj4j</groupId>
+			<artifactId>proj4j</artifactId>
+			<version>${proj4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.locationtech.proj4j</groupId>
+			<artifactId>proj4j-epsg</artifactId>
+			<version>${proj4j.version}</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
