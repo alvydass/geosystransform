@@ -1,6 +1,6 @@
 package com.geosystem.transform.views.editor;
 
-import com.geosystem.transform.views.main.MainLayout;
+import com.geosystem.transform.views.main.MainLayoutView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -8,7 +8,7 @@ import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Route(value = "editor", layout = MainLayout.class)
+@Route(value = "editor", layout = MainLayoutView.class)
 @PageTitle("Coordinates editor")
 public class CoordinatesEditorView extends VerticalLayout {
 

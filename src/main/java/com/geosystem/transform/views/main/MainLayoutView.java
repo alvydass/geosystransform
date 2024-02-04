@@ -1,7 +1,7 @@
 package com.geosystem.transform.views.main;
 
 import com.geosystem.transform.views.editor.CoordinatesEditorView;
-import com.geosystem.transform.views.files.MultipleCoordinateConverter;
+import com.geosystem.transform.views.files.MultipleCoordinateConverterView;
 import com.geosystem.transform.views.single.SingleCoordinateTransformView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -13,9 +13,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
-public class MainLayout extends AppLayout {
+public class MainLayoutView extends AppLayout {
 
-    public MainLayout() {
+    public MainLayoutView() {
         createHeader();
         createDrawer();
     }
@@ -47,7 +47,7 @@ public class MainLayout extends AppLayout {
     private void createDrawer() {
         addToDrawer(new VerticalLayout(
                 new RouterLink("Single Coordinate Converter", SingleCoordinateTransformView.class),
-                new RouterLink("Multiple Coordinates Converter", MultipleCoordinateConverter.class),
+                new RouterLink("Multiple Coordinates Converter", MultipleCoordinateConverterView.class),
                 new RouterLink("Coordinates editor", CoordinatesEditorView.class)
         ));
     }

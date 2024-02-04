@@ -3,7 +3,7 @@ package com.geosystem.transform.views.single;
 import com.geosystem.transform.converter.model.Response;
 import com.geosystem.transform.converter.CoordinateConverter;
 import com.geosystem.transform.enums.CoordinateType;
-import com.geosystem.transform.views.main.MainLayout;
+import com.geosystem.transform.views.main.MainLayoutView;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -17,7 +17,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Route(value = "", layout = MainLayout.class)
+@Route(value = "", layout = MainLayoutView.class)
 @PageTitle("Single Coordinate Converter")
 public class SingleCoordinateTransformView extends VerticalLayout {
 
