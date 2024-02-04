@@ -1,7 +1,7 @@
 package com.geosystem.transform.converter.model;
 
 
-public interface Response {
+public interface CoordinateWrapper {
 
     String getAval();
     String getBval();

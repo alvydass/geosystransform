@@ -1,6 +1,6 @@
 package com.geosystem.transform.views.single;
 
-import com.geosystem.transform.converter.model.Response;
+import com.geosystem.transform.converter.model.CoordinateWrapper;
 import com.geosystem.transform.converter.CoordinateConverter;
 import com.geosystem.transform.enums.CoordinateType;
 import com.geosystem.transform.views.main.MainLayoutView;
@@ -70,8 +70,8 @@ public class SingleCoordinateTransformView extends VerticalLayout {
             double latitude = Double.parseDouble(latInput);
             double longitude = Double.parseDouble(lonInput);
 
-            Response response = converter.convert(latitude, longitude, inputTypeValue, destinationTypeValue);
-            output.setText(response.getText());
+            CoordinateWrapper coordinateWrapper = converter.convert(latitude, longitude, inputTypeValue, destinationTypeValue);
+            output.setText(coordinateWrapper.getText());
 
         } catch (NumberFormatException e) {
             Notification.show("Invalid numeric format for coordinates");
