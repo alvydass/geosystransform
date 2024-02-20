@@ -11,10 +11,10 @@ public class FileWriterFactory {
 
     public static CoordinateFileWriter getWriter(String fileName) {
         FileType mimeType = FileType.valueOf(StringUtils.toRootUpperCase(FileNameUtils.getExtension(fileName)));
-        switch (mimeType) {
-            case CSV: return new CsvWriter();
-            default:
-                throw new IllegalArgumentException("Unsupported file type: " + fileName);
-        }
+        return switch (mimeType) {
+            case CSV -> new CsvWriter();
+            case JSON -> new GeoJsonWriter();
+            default -> throw new IllegalArgumentException("Unsupported file type: " + fileName);
+        };
     }
 }

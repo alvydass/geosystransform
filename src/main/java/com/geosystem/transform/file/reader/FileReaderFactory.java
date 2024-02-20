@@ -13,6 +13,7 @@ public class FileReaderFactory {
         FileType mimeType = FileType.valueOf(StringUtils.toRootUpperCase(FileNameUtils.getExtension(fileName)));
         switch (mimeType) {
             case CSV: return new CsvReader();
+            case JSON: return new GeoJsonReader();
             default:
                 throw new IllegalArgumentException("Unsupported file type for file: " + fileName);
         }

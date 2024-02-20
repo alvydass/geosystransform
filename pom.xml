@@ -72,6 +72,12 @@
 			<artifactId>maplibre</artifactId>
 			<version>0.0.3</version>
 		</dependency>
+		<dependency>
+			<groupId>de.grundid.opendatalab</groupId>
+			<artifactId>geojson-jackson</artifactId>
+			<version>1.14</version>
+		</dependency>
+
 
 	</dependencies>
 	<dependencyManagement>

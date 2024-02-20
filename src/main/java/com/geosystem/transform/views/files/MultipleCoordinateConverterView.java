@@ -52,7 +52,7 @@ public class MultipleCoordinateConverterView extends VerticalLayout {
 
         setDefaultHorizontalComponentAlignment(Alignment.AUTO);
 
-        upload.setAcceptedFileTypes("text/csv");
+        upload.setAcceptedFileTypes("text/csv", "application/json");
         upload.setMaxFiles(1);
         downloadButton.setVisible(false);
         downloadLink.add(downloadButton);
@@ -72,7 +72,6 @@ public class MultipleCoordinateConverterView extends VerticalLayout {
 
             downloadLink.setHref(streamResource);
             downloadLink.getElement().setAttribute("download", true);
-
 
             downloadButton.setVisible(true);
             downloadLink.setEnabled(true);
