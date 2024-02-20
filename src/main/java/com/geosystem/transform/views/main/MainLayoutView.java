@@ -3,6 +3,7 @@ package com.geosystem.transform.views.main;
 import com.geosystem.transform.views.editor.CoordinatesEditorView;
 import com.geosystem.transform.views.files.MultipleCoordinateConverterView;
 import com.geosystem.transform.views.single.SingleCoordinateTransformView;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.H1;
@@ -16,6 +17,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 public class MainLayoutView extends AppLayout {
 
     public MainLayoutView() {
+        addClassName("main-layout-view-app-layout");
         createHeader();
         createDrawer();
     }
@@ -25,7 +27,7 @@ public class MainLayoutView extends AppLayout {
         logo.setHeight("40px");
         logo.addClassName("globe-image");
 
-        H1 h1 = new H1("GeoSysTransform");
+        H1 h1 = new H1("GeoTransform");
         h1.addClassNames(
                 LumoUtility.FontSize.LARGE,
                 LumoUtility.Margin.MEDIUM,
@@ -33,7 +35,7 @@ public class MainLayoutView extends AppLayout {
 
 
         var header = new HorizontalLayout(new DrawerToggle(), logo, h1);
-
+        header.getStyle().set("background-color", "#a6ffd4");
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.setWidthFull();
         header.expand(h1);
@@ -45,10 +47,34 @@ public class MainLayoutView extends AppLayout {
     }
 
     private void createDrawer() {
-        addToDrawer(new VerticalLayout(
-                new RouterLink("Coordinate Converter", SingleCoordinateTransformView.class),
-                new RouterLink("File Coordinates Converter", MultipleCoordinateConverterView.class),
-                new RouterLink("Interactive Map", CoordinatesEditorView.class)
-        ));
+        VerticalLayout drawerLayout = new VerticalLayout(
+                createRouterLink("Coordinate Converter", SingleCoordinateTransformView.class),
+                createRouterLink("File Converter", MultipleCoordinateConverterView.class),
+                createRouterLink("Interactive Map", CoordinatesEditorView.class)
+        );
+
+        drawerLayout.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH);
+
+        drawerLayout.addClassName("drawer");
+        drawerLayout.setHeight("100%");
+
+        drawerLayout.getChildren().forEach(component -> {
+            if (component instanceof RouterLink routerLink) {
+                routerLink.getElement().getStyle().set("border", "1px solid black");
+                routerLink.getElement().getStyle().set("border-radius", "5px");
+                routerLink.getElement().getStyle().set("padding", "10px");
+                routerLink.getElement().getStyle().set("background-color", "#a3ffa3");
+                routerLink.getElement().getStyle().set("color", "#0a3d08");
+                routerLink.getStyle().set("font-family", "arial");
+            }
+        });
+
+        addToDrawer(drawerLayout);
+    }
+
+    private RouterLink createRouterLink(String text, Class<? extends Component> target) {
+        RouterLink routerLink = new RouterLink(text, target);
+        routerLink.addClassName("menu-link");
+        return routerLink;
     }
 }

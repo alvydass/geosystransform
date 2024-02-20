@@ -7,3 +7,18 @@
 .logo-text {
     color: #39a93a;
 }
+a[highlight] {
+    font-weight: bold;
+    text-decoration: underline;
+}
+.main-layout-view-app-layout {
+    background-color: #e1f8e1;
+}
+
+.drawer {
+    background-color: #6fd96f;
+}
+
+.header {
+    background-color: #a6ffd4;
+}
