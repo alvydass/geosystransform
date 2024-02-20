@@ -18,7 +18,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 @Route(value = "", layout = MainLayoutView.class)
-@PageTitle("Single Coordinate Converter")
+@PageTitle("Coordinate Converter")
 public class SingleCoordinateTransformView extends VerticalLayout {
 
     private final CoordinateConverter converter;
@@ -36,7 +36,7 @@ public class SingleCoordinateTransformView extends VerticalLayout {
 
     public SingleCoordinateTransformView() {
         converter = new CoordinateConverter();
-        H1 logo = new H1("Single Coordinate Converter");
+        H1 logo = new H1("Coordinate Converter");
         addClassName("single-coordinate-view");
         setDefaultHorizontalComponentAlignment(Alignment.AUTO);
 

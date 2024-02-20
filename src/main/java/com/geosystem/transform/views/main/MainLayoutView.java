@@ -46,9 +46,9 @@ public class MainLayoutView extends AppLayout {
 
     private void createDrawer() {
         addToDrawer(new VerticalLayout(
-                new RouterLink("Single Coordinate Converter", SingleCoordinateTransformView.class),
-                new RouterLink("Multiple Coordinates Converter", MultipleCoordinateConverterView.class),
-                new RouterLink("Coordinates editor", CoordinatesEditorView.class)
+                new RouterLink("Coordinate Converter", SingleCoordinateTransformView.class),
+                new RouterLink("File Coordinates Converter", MultipleCoordinateConverterView.class),
+                new RouterLink("Interactive Map", CoordinatesEditorView.class)
         ));
     }
 }

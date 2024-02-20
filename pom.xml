@@ -18,6 +18,12 @@
 		<vaadin.version>24.3.2</vaadin.version>
 		<proj4j.version>1.3.0</proj4j.version>
 	</properties>
+	<repositories>
+		<repository>
+			<id>vaadin-addons</id>
+			<url>https://maven.vaadin.com/vaadin-addons</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>com.vaadin</groupId>
@@ -60,6 +66,11 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.15.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.parttio</groupId>
+			<artifactId>maplibre</artifactId>
+			<version>0.0.3</version>
 		</dependency>
 
 	</dependencies>
