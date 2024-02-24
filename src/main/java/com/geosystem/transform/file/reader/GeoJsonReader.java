@@ -2,6 +2,7 @@ package com.geosystem.transform.file.reader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.geosystem.transform.file.Coordinate;
+import com.geosystem.transform.file.reader.exception.CoordinateReadException;
 import lombok.SneakyThrows;
 import org.geojson.*;
 
@@ -16,7 +17,12 @@ public class GeoJsonReader implements CoordinateFileReader {
     @SneakyThrows
     @Override
     public List<Coordinate> read(InputStream fileStream) {
-        FeatureCollection geometryCollection = objectMapper.readValue(fileStream, FeatureCollection.class);
+        FeatureCollection geometryCollection;
+        try {
+            geometryCollection = objectMapper.readValue(fileStream, FeatureCollection.class);
+        } catch (Exception e) {
+            throw new CoordinateReadException("Failed to read json file because " + e.getMessage(), e);
+        }
 
         List<Feature> features = geometryCollection.getFeatures();
         List<Coordinate> coordinates = new ArrayList<>();

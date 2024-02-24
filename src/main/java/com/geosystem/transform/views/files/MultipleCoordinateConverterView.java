@@ -10,6 +10,7 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.Upload;
@@ -65,9 +66,14 @@ public class MultipleCoordinateConverterView extends VerticalLayout {
             CoordinateType inputTypeValue = CoordinateType.valueOf(inputType.getValue());
             CoordinateType destinationTypeValue = CoordinateType.valueOf(destinationType.getValue());
 
-            StreamResource streamResource = fileConverter.convert(fileStream, fileName, inputTypeValue, destinationTypeValue);
-            if (Objects.isNull(streamResource)) {
-                Notification.show("Conversion failed", 3000, Notification.Position.MIDDLE);
+            StreamResource streamResource;
+            try {
+                streamResource = fileConverter.convert(fileStream, fileName, inputTypeValue, destinationTypeValue);
+            } catch (Exception exc) {
+                Notification notification = new Notification("Conversion failed. Reason: " + exc.getMessage(), 5000, Notification.Position.MIDDLE);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                notification.open();
+                return;
             }
 
             downloadLink.setHref(streamResource);

@@ -64,12 +64,14 @@ public class SingleCoordinateTransformView extends VerticalLayout {
         String lonInput = lonCoordinateInput.getValue();
 
 
-        if (latInput.isEmpty() || lonInput.isEmpty() || inputType.getValue().isEmpty() || destinationType.getValue().isEmpty()) {
+        if (isAnyInputEmpty(latInput, lonInput)) {
+            markEmptyComponents(latInput, lonInput);
             Notification notification = new Notification("Coordinates and input - output coordinate systems are mandatory", 5000, Notification.Position.MIDDLE);
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             notification.open();
             return;
         }
+        clearInputErrors();
         CoordinateType inputTypeValue = CoordinateType.valueOf(inputType.getValue());
         CoordinateType destinationTypeValue = CoordinateType.valueOf(destinationType.getValue());
 
@@ -91,6 +93,37 @@ public class SingleCoordinateTransformView extends VerticalLayout {
         }
     }
 
+    private void clearInputErrors() {
+
+        latCoordinateInput.setInvalid(false);
+
+        lonCoordinateInput.setInvalid(false);
+
+        inputType.setInvalid(false);
+
+        destinationType.setInvalid(false);
+
+    }
+
+    private void markEmptyComponents(String latInput, String lonInput) {
+        if (latInput.isEmpty()) {
+            latCoordinateInput.setInvalid(true);
+        }
+        if (lonInput.isEmpty()) {
+            lonCoordinateInput.setInvalid(true);
+        }
+        if (inputType.getValue().isEmpty()) {
+            inputType.setInvalid(true);
+        }
+        if (destinationType.getValue().isEmpty()) {
+            destinationType.setInvalid(true);
+        }
+    }
+
+    private boolean isAnyInputEmpty(String latInput, String lonInput) {
+        return latInput.isEmpty() || lonInput.isEmpty() || inputType.getValue().isEmpty() || destinationType.getValue().isEmpty();
+    }
+
     private void updatePlaceholders() {
         String inputTypeValue = inputType.getValue();
         InputDataHelper helper = InputDataHelperFactory.getHelper(inputTypeValue);
@@ -100,6 +133,5 @@ public class SingleCoordinateTransformView extends VerticalLayout {
         lonCoordinateInput.setPlaceholder("Example: " + helper.getSecondCoordinate());
         latCoordinateInput.setLabel(helper.getFirstLabel());
         lonCoordinateInput.setLabel(helper.getSecondLabel());
-
     }
 }

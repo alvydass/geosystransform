@@ -22,3 +22,7 @@ a[highlight] {
 .header {
     background-color: #a6ffd4;
 }
+
+.error {
+    border: 1px solid red;
+}

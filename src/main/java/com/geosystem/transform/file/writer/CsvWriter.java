@@ -31,7 +31,7 @@ public class CsvWriter implements CoordinateFileWriter {
 
             return new StreamResource(fileNamePart + "Coordinates.csv", () -> byteArrayInputStream);
         } catch (IOException e) {
-            return null;
+            throw new CoordinateWriteException("Failed to write csv file because " + e.getMessage(), e);
         }
     }
 }

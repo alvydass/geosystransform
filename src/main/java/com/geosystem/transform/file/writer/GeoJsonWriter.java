@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.geosystem.transform.converter.model.CoordinateWrapper;
 import com.vaadin.flow.server.StreamResource;
 import org.geojson.*;
-import org.locationtech.jts.geom.Position;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class GeoJsonWriter implements CoordinateFileWriter {
 
             return new StreamResource(fileNamePart + "File.json", () -> inputStream);
         } catch (IOException e) {
-            return null;
+            throw new CoordinateWriteException("Failed to write json file because " + e.getMessage(), e);
         }
     }
 

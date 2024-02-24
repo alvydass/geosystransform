@@ -2,6 +2,7 @@ package com.geosystem.transform.file.reader;
 
 import com.geosystem.transform.file.Coordinate;
 import com.geosystem.transform.file.reader.CoordinateFileReader;
+import com.geosystem.transform.file.reader.exception.CoordinateReadException;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 
@@ -26,7 +27,7 @@ public class CsvReader implements CoordinateFileReader {
                 coordinates.add(Coordinate.of(latitude, longitude));
             }
         } catch (IOException | CsvException e) {
-            return Collections.emptyList();
+            throw new CoordinateReadException("Failed to read csv file because " + e.getMessage(), e);
         }
 
         return coordinates;
