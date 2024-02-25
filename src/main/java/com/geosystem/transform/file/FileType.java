@@ -4,7 +4,9 @@ import lombok.Getter;
 
 public enum FileType {
     CSV("csv"),
-    JSON("json");
+    JSON("json"),
+
+    KML("kml");
 
     @Getter
     private final String fileType;

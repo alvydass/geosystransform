@@ -78,6 +78,13 @@
 			<version>1.14</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/uk.m0nom/javaapiforkml -->
+		<dependency>
+			<groupId>uk.m0nom</groupId>
+			<artifactId>javaapiforkml</artifactId>
+			<version>3.0.8</version>
+		</dependency>
+
 
 	</dependencies>
 	<dependencyManagement>

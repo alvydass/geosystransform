@@ -14,6 +14,7 @@ public class FileReaderFactory {
         switch (mimeType) {
             case CSV: return new CsvReader();
             case JSON: return new GeoJsonReader();
+            case KML: return new KmlReader();
             default:
                 throw new IllegalArgumentException("Unsupported file type for file: " + fileName);
         }

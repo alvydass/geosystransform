@@ -14,6 +14,7 @@ public class FileWriterFactory {
         return switch (mimeType) {
             case CSV -> new CsvWriter();
             case JSON -> new GeoJsonWriter();
+            case KML -> new KmlWriter();
             default -> throw new IllegalArgumentException("Unsupported file type: " + fileName);
         };
     }
