@@ -1,7 +1,14 @@
 package com.geosystem.transform.views.editor;
 
+import com.geosystem.transform.converter.CoordinateConverter;
+import com.geosystem.transform.converter.model.CoordinateWrapper;
+import com.geosystem.transform.enums.CoordinateType;
+import com.geosystem.transform.file.reader.CoordinateFileReader;
+import com.geosystem.transform.file.reader.FileReaderFactory;
 import com.geosystem.transform.views.main.MainLayoutView;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
@@ -18,10 +25,12 @@ import org.locationtech.jts.geom.Coordinate;
 import org.vaadin.addons.maplibre.MapLibre;
 import org.vaadin.addons.maplibre.Marker;
 
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Route(value = "editor", layout = MainLayoutView.class)
 @PageTitle("Interactive Map")
@@ -37,13 +46,18 @@ public class CoordinatesEditorView extends VerticalLayout {
     private Button updateButton = new Button("Add Marker");
 
     private Button addMarkersButton = new Button("Add Markers");
-    private List<Marker> markers = new ArrayList<>();
+    private Set<Marker> markers = new HashSet<>();
 
     private Button clearMarkersButton = new Button("Clear Markers");
 
+    private ComboBox<String> inputType = new ComboBox<>("Coordinate Type");
 
-    public CoordinatesEditorView() throws URISyntaxException {
-        H1 logo = new H1("Coordinates editor");
+    private final CoordinateConverter converter;
+
+
+    public CoordinatesEditorView(CoordinateConverter converter) throws URISyntaxException {
+        this.converter = converter;
+        H1 logo = new H1("Interactive map");
         addClassName("coordinates-editor-view");
         setDefaultHorizontalComponentAlignment(Alignment.AUTO);
         upload.setAcceptedFileTypes("text/csv", "application/json");
@@ -52,7 +66,6 @@ public class CoordinatesEditorView extends VerticalLayout {
         MapLibre map = new MapLibre(new URI("https://demotiles.maplibre.org/style.json"));
         map.setHeight("800px");
         map.setWidth("100%");
-        map.setCenter(25.282911, 54.687046);
         map.setZoomLevel(1);
         map.addMapClickListener(listener -> {
             Coordinate point = listener.getPoint();
@@ -63,18 +76,53 @@ public class CoordinatesEditorView extends VerticalLayout {
         HorizontalLayout fileAndMarker = new HorizontalLayout();
         latInput.setPlaceholder("Example: 25.282911" );
         lonInput.setPlaceholder("Example: 54.687046");
-        HorizontalLayout customMarkerPanel = new HorizontalLayout();
-        customMarkerPanel.setDefaultVerticalComponentAlignment(Alignment.AUTO);
-        customMarkerPanel.setAlignItems(Alignment.AUTO);
-        customMarkerPanel.getStyle().set("border-radius", "10px");
-        customMarkerPanel.getStyle().set("border", "2px solid #CCCCCC");
-        customMarkerPanel.getStyle().set("padding", "5px");
-        customMarkerPanel.addClassName("custom-border");
+        HorizontalLayout customMarkerPanel = getUploadFileLayout();
         updateButton.getStyle().set("margin-top", "36px");
         updateButton.addClickListener(listener -> {
-            updateMapMarker(map);
+            addMapMarker(map);
         });
         customMarkerPanel.add(latInput, lonInput, updateButton);
+        HorizontalLayout uploadLayout = getUploadFileLayout();
+
+        inputType.setItems(CoordinateType.WGS.name(), CoordinateType.LKS.name());
+        addMarkersButton.getStyle().set("margin-top", "36px");
+        addMarkersButtonListener(map);
+        uploadLayout.add(upload, inputType, addMarkersButton);
+
+        HorizontalLayout clearButtonLayout = getClearMarkersButtonLayout();
+        fileAndMarker.add(uploadLayout, customMarkerPanel, clearButtonLayout);
+
+        clearMarkersButton.getStyle().set("margin-top", "44px");
+        clearMarkersButton.addClickListener(listener -> clearMarkers(map));
+        add(logo, fileAndMarker, new Text("Supported file formats: CSV, GeoJSON, KML"), coordinatesSpan, map);
+    }
+
+    private void addMarkersButtonListener(MapLibre map) {
+        addMarkersButton.addClickListener(listener -> {
+            InputStream fileStream = buffer.getInputStream();
+            String fileName = buffer.getFileName();
+            CoordinateType inputTypeValue = CoordinateType.valueOf(inputType.getValue());
+            if (CoordinateType.WGS.equals(inputTypeValue)) {
+                CoordinateFileReader reader = FileReaderFactory.getReader(fileName);
+                List<com.geosystem.transform.file.Coordinate> coordinates = reader.read(fileStream);
+                addMapMarkers(coordinates, map);
+            } else {
+                CoordinateFileReader reader = FileReaderFactory.getReader(fileName);
+                List<com.geosystem.transform.file.Coordinate> coordinates = reader.read(fileStream);
+                List<CoordinateWrapper> transformedCoordinates = converter.convert(coordinates, inputTypeValue, CoordinateType.WGS);
+                List<com.geosystem.transform.file.Coordinate> wgsCoordinates = mapCoordinates(transformedCoordinates);
+                addMapMarkers(wgsCoordinates, map);
+            }
+        });
+    }
+
+    private List<com.geosystem.transform.file.Coordinate> mapCoordinates(List<CoordinateWrapper> transformedCoordinates) {
+        return transformedCoordinates.stream()
+                .map(tc -> com.geosystem.transform.file.Coordinate.of(Double.parseDouble(tc.getAval()), Double.parseDouble(tc.getBval())))
+                .toList();
+    }
+
+    private static HorizontalLayout getUploadFileLayout() {
         HorizontalLayout uploadLayout = new HorizontalLayout();
         uploadLayout.setDefaultVerticalComponentAlignment(Alignment.AUTO);
         uploadLayout.setAlignItems(Alignment.AUTO);
@@ -82,19 +130,15 @@ public class CoordinatesEditorView extends VerticalLayout {
         uploadLayout.getStyle().set("border", "2px solid #CCCCCC");
         uploadLayout.getStyle().set("padding", "5px");
         uploadLayout.addClassName("custom-border");
+        return uploadLayout;
+    }
 
-        addMarkersButton.getStyle().set("margin-top", "36px");
-        uploadLayout.add(upload, addMarkersButton);
-
+    private HorizontalLayout getClearMarkersButtonLayout() {
         HorizontalLayout clearButtonLayout = new HorizontalLayout();
         clearButtonLayout.setDefaultVerticalComponentAlignment(Alignment.AUTO);
         clearButtonLayout.setAlignItems(Alignment.AUTO);
-        clearMarkersButton.getStyle().set("margin-top", "44px");
         clearButtonLayout.add(clearMarkersButton);
-        fileAndMarker.add(uploadLayout, customMarkerPanel, clearButtonLayout);
-
-        clearMarkersButton.addClickListener(listener -> clearMarkers(map));
-        add(logo, fileAndMarker, coordinatesSpan, map);
+        return clearButtonLayout;
     }
 
     private void copyCoordinatesToClipboard(Coordinate coordinate) {
@@ -113,15 +157,24 @@ public class CoordinatesEditorView extends VerticalLayout {
         coordinatesSpan.getStyle().set("font-family", "Arial");
     }
 
-    private void updateMapMarker(MapLibre map) {
+    private void addMapMarker(MapLibre map) {
         try {
             double latitude = Double.parseDouble(latInput.getValue());
             double longitude = Double.parseDouble(lonInput.getValue());
 
             Marker marker = map.addMarker(latitude, longitude);
+            marker.withPopup("Lat: " + latitude + " Lon: " + longitude);
             markers.add(marker);
         } catch (NumberFormatException e) {
             Notification.show("Invalid numeric format for latitude or longitude", 3000, Notification.Position.MIDDLE);
+        }
+    }
+
+    private void addMapMarkers(List<com.geosystem.transform.file.Coordinate> coordinates, MapLibre map) {
+        for (com.geosystem.transform.file.Coordinate coordinate : coordinates) {
+            Marker marker = map.addMarker(coordinate.getLatitude(), coordinate.getLongitude());
+            marker.withPopup("Lat: " + coordinate.getLatitude() + " Lon: " + coordinate.getLongitude());
+            markers.add(marker);
         }
     }
 
