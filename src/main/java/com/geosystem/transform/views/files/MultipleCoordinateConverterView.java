@@ -2,8 +2,10 @@ package com.geosystem.transform.views.files;
 
 import com.geosystem.transform.converter.FileConverter;
 import com.geosystem.transform.enums.CoordinateType;
+import com.geosystem.transform.file.FileType;
 import com.geosystem.transform.views.main.MainLayoutView;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H1;
@@ -34,6 +36,10 @@ public class MultipleCoordinateConverterView extends VerticalLayout {
     private ComboBox<String> inputType = new ComboBox<>("Convert from:");
     private ComboBox<String> destinationType = new ComboBox<>("Convert to:");
 
+    private ComboBox<String> destinationFileType = new ComboBox<>("Convert to file type:");
+
+    Checkbox sameFileType = new Checkbox("Convert to same file type");
+
     private Button downloadButton =  new Button("Download file", new Icon(VaadinIcon.DOWNLOAD));
 
     private final FileConverter fileConverter;
@@ -46,6 +52,7 @@ public class MultipleCoordinateConverterView extends VerticalLayout {
 
         inputType.setItems(CoordinateType.WGS.name(), CoordinateType.LKS.name());
         destinationType.setItems(CoordinateType.WGS.name(), CoordinateType.LKS.name());
+        destinationFileType.setItems(FileType.CSV.name(), FileType.KML.name(), FileType.JSON.name());
 
         HorizontalLayout typesLayout = new HorizontalLayout();
         typesLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
@@ -53,10 +60,18 @@ public class MultipleCoordinateConverterView extends VerticalLayout {
 
         setDefaultHorizontalComponentAlignment(Alignment.AUTO);
 
+        HorizontalLayout sameFileTypeLayout = new HorizontalLayout();
+        sameFileTypeLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+        sameFileTypeLayout.add(destinationFileType, sameFileType);
+
         //upload.setAcceptedFileTypes("text/csv", "application/json", "application/vnd.google-earth.kml+xml");
         upload.setMaxFiles(1);
         downloadButton.setVisible(false);
         downloadLink.add(downloadButton);
+
+        sameFileType.addValueChangeListener(event -> {
+            destinationFileType.setEnabled(!event.getValue());
+        });
 
         convertButton.addClickListener(event -> {
             downloadButton.setVisible(false);
@@ -68,7 +83,12 @@ public class MultipleCoordinateConverterView extends VerticalLayout {
 
             StreamResource streamResource;
             try {
-                streamResource = fileConverter.convert(fileStream, fileName, inputTypeValue, destinationTypeValue);
+                if (sameFileType.getValue()) {
+                    streamResource = fileConverter.convert(fileStream, fileName, inputTypeValue, destinationTypeValue);
+                } else {
+                    FileType fileType = FileType.valueOf(destinationFileType.getValue());
+                    streamResource = fileConverter.convert(fileStream, fileName, inputTypeValue, destinationTypeValue, fileType);
+                }
             } catch (Exception exc) {
                 Notification notification = new Notification("Conversion failed. Reason: " + exc.getMessage(), 5000, Notification.Position.MIDDLE);
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
@@ -83,6 +103,6 @@ public class MultipleCoordinateConverterView extends VerticalLayout {
             downloadLink.setEnabled(true);
         });
 
-        add(logo, upload, typesLayout, convertButton, downloadLink);
+        add(logo, upload, typesLayout, sameFileTypeLayout, convertButton, downloadLink);
     }
 }
