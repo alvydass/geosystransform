@@ -53,7 +53,7 @@ public class MultipleCoordinateConverterView extends VerticalLayout {
 
         setDefaultHorizontalComponentAlignment(Alignment.AUTO);
 
-        upload.setAcceptedFileTypes("text/csv", "application/json");
+        //upload.setAcceptedFileTypes("text/csv", "application/json", "application/vnd.google-earth.kml+xml");
         upload.setMaxFiles(1);
         downloadButton.setVisible(false);
         downloadLink.add(downloadButton);
