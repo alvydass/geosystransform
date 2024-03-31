@@ -12,6 +12,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -30,6 +31,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Route(value = "editor", layout = MainLayoutView.class)
@@ -63,13 +65,13 @@ public class CoordinatesEditorView extends VerticalLayout {
         upload.setAcceptedFileTypes("text/csv", "application/json");
         upload.setMaxFiles(1);
 
-        MapLibre map = new MapLibre(new URI("https://demotiles.maplibre.org/style.json"));
+        MapLibre map = new MapLibre(new URI("https://api.maptiler.com/maps/streets/style.json?key=klhvW36HyHrDRHEaCYeH"));
         map.setHeight("800px");
         map.setWidth("100%");
-        map.setZoomLevel(1);
+        map.setZoomLevel(3);
+        map.setCenter( 25.295217911869514,  54.684368985374704);
         map.addMapClickListener(listener -> {
             Coordinate point = listener.getPoint();
-            copyCoordinatesToClipboard(point);
             updateCoordinatesSpan(point);
         });
 
@@ -99,6 +101,14 @@ public class CoordinatesEditorView extends VerticalLayout {
 
     private void addMarkersButtonListener(MapLibre map) {
         addMarkersButton.addClickListener(listener -> {
+            if (isAnyInputEmpty()) {
+                markEmptyComponents();
+                Notification notification = new Notification("Please fill mandatory fields (marked red)", 5000, Notification.Position.MIDDLE);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                notification.open();
+                return;
+            }
+            clearInputErrors();
             InputStream fileStream = buffer.getInputStream();
             String fileName = buffer.getFileName();
             CoordinateType inputTypeValue = CoordinateType.valueOf(inputType.getValue());
@@ -141,15 +151,6 @@ public class CoordinatesEditorView extends VerticalLayout {
         return clearButtonLayout;
     }
 
-    private void copyCoordinatesToClipboard(Coordinate coordinate) {
-        VaadinSession.getCurrent().getUIs().forEach(ui ->
-                ui.access((Command) () -> {
-                    String coordinates = coordinate.getX() + ", " + coordinate.getY();
-                    ui.getPage().executeJs("navigator.clipboard.writeText($0)", coordinates);
-                    Notification.show("Coordinates copied", 1000, Notification.Position.MIDDLE);
-                }));
-    }
-
     private void updateCoordinatesSpan(Coordinate coordinate) {
         String coordinates = "Coordinates: " + coordinate.getX() + ", " + coordinate.getY();
         coordinatesSpan.setText(coordinates);
@@ -158,6 +159,14 @@ public class CoordinatesEditorView extends VerticalLayout {
     }
 
     private void addMapMarker(MapLibre map) {
+        if (latInput.isEmpty() || lonInput.isEmpty()) {
+            markEmptyComponentsSingleMarker();
+            Notification notification = new Notification("Please fill mandatory fields (marked red)", 5000, Notification.Position.MIDDLE);
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            notification.open();
+            return;
+        }
+        clearEmptyComponentsSingleMarker();
         try {
             double latitude = Double.parseDouble(latInput.getValue());
             double longitude = Double.parseDouble(lonInput.getValue());
@@ -168,6 +177,11 @@ public class CoordinatesEditorView extends VerticalLayout {
         } catch (NumberFormatException e) {
             Notification.show("Invalid numeric format for latitude or longitude", 3000, Notification.Position.MIDDLE);
         }
+    }
+
+    private void clearEmptyComponentsSingleMarker() {
+        latInput.setInvalid(false);
+        lonInput.setInvalid(false);
     }
 
     private void addMapMarkers(List<com.geosystem.transform.file.Coordinate> coordinates, MapLibre map) {
@@ -181,5 +195,33 @@ public class CoordinatesEditorView extends VerticalLayout {
     private void clearMarkers(MapLibre map) {
         markers.forEach(map::removeLayer);
         markers.clear();
+    }
+
+    private void markEmptyComponentsSingleMarker() {
+        if (latInput.isEmpty()) {
+            latInput.setInvalid(true);
+        }
+        if (lonInput.isEmpty()) {
+            lonInput.setInvalid(true);
+        }
+    }
+
+    private void markEmptyComponents() {
+        if (Objects.isNull(buffer.getFileData())) {
+            upload.getElement().executeJs("this.classList.add('invalid-upload')");
+        }
+        if (Objects.isNull(inputType.getValue())) {
+            inputType.setInvalid(true);
+        }
+    }
+
+    private boolean isAnyInputEmpty() {
+        return  Objects.isNull(inputType.getValue()) ||
+                Objects.isNull(buffer.getFileData());
+    }
+
+    private void clearInputErrors() {
+        upload.getElement().executeJs("this.classList.remove('invalid-upload')");
+        inputType.setInvalid(false);
     }
 }

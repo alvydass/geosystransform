@@ -26,3 +26,7 @@ a[highlight] {
 .error {
     border: 1px solid red;
 }
+
+.invalid-upload {
+    border: 1px solid red; /* Example style indicating invalid state */
+}

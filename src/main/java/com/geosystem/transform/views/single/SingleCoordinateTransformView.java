@@ -20,6 +20,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import java.util.Objects;
+
 @Route(value = "", layout = MainLayoutView.class)
 @PageTitle("Coordinate Converter")
 public class SingleCoordinateTransformView extends VerticalLayout {
@@ -66,7 +68,7 @@ public class SingleCoordinateTransformView extends VerticalLayout {
 
         if (isAnyInputEmpty(latInput, lonInput)) {
             markEmptyComponents(latInput, lonInput);
-            Notification notification = new Notification("Coordinates and input - output coordinate systems are mandatory", 5000, Notification.Position.MIDDLE);
+            Notification notification = new Notification("Please fill mandatory fields (marked red)", 5000, Notification.Position.MIDDLE);
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             notification.open();
             return;
@@ -112,16 +114,16 @@ public class SingleCoordinateTransformView extends VerticalLayout {
         if (lonInput.isEmpty()) {
             lonCoordinateInput.setInvalid(true);
         }
-        if (inputType.getValue().isEmpty()) {
+        if (Objects.isNull(inputType.getValue())) {
             inputType.setInvalid(true);
         }
-        if (destinationType.getValue().isEmpty()) {
+        if (Objects.isNull(destinationType.getValue())) {
             destinationType.setInvalid(true);
         }
     }
 
     private boolean isAnyInputEmpty(String latInput, String lonInput) {
-        return latInput.isEmpty() || lonInput.isEmpty() || inputType.getValue().isEmpty() || destinationType.getValue().isEmpty();
+        return latInput.isEmpty() || lonInput.isEmpty() || Objects.isNull(inputType.getValue()) || Objects.isNull(destinationType.getValue());
     }
 
     private void updatePlaceholders() {

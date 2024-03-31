@@ -75,6 +75,14 @@ public class MultipleCoordinateConverterView extends VerticalLayout {
 
         convertButton.addClickListener(event -> {
             downloadButton.setVisible(false);
+            if (isAnyInputEmpty()) {
+                markEmptyComponents();
+                Notification notification = new Notification("Please fill mandatory fields (marked red)", 5000, Notification.Position.MIDDLE);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                notification.open();
+                return;
+            }
+            clearInputErrors();
             InputStream fileStream = buffer.getInputStream();
             String fileName = buffer.getFileName();
 
@@ -104,5 +112,46 @@ public class MultipleCoordinateConverterView extends VerticalLayout {
         });
 
         add(logo, upload, typesLayout, sameFileTypeLayout, convertButton, downloadLink);
+    }
+
+    private void markEmptyComponents() {
+        if (Objects.isNull(buffer.getFileData())) {
+            upload.getElement().executeJs("this.classList.add('invalid-upload')");
+        }
+        if (Objects.isNull(inputType.getValue())) {
+            inputType.setInvalid(true);
+        }
+        if (Objects.isNull(destinationType.getValue())) {
+            destinationType.setInvalid(true);
+        }
+        if (!validFileTypeSelect()) {
+            destinationFileType.setInvalid(true);
+        }
+    }
+
+    private boolean isAnyInputEmpty() {
+        return  Objects.isNull(inputType.getValue()) ||
+                Objects.isNull(destinationType.getValue()) ||
+                Objects.isNull(buffer.getFileData()) ||
+                !validFileTypeSelect();
+    }
+
+    private boolean validFileTypeSelect() {
+        if (Boolean.TRUE.equals(sameFileType.getValue())) {
+            return false;
+        }
+        return Objects.nonNull(destinationFileType.getValue());
+    }
+
+    private void clearInputErrors() {
+
+        upload.getElement().executeJs("this.classList.remove('invalid-upload')");
+
+        destinationFileType.setInvalid(false);
+
+        inputType.setInvalid(false);
+
+        destinationType.setInvalid(false);
+
     }
 }
