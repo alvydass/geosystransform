@@ -20,7 +20,7 @@ public class CoordinateConverter {
 
         CoordinateTransformFactory ctFactory = new CoordinateTransformFactory();
         CoordinateTransform coordinateTransformer = ctFactory.createTransform(fromCoordinateSystem, toCoordinateSystem);
-        ProjCoordinate fromCoordinate = new ProjCoordinate(lon, lat);
+        ProjCoordinate fromCoordinate = new ProjCoordinate(lat, lon);
         ProjCoordinate toCoordinate = new ProjCoordinate();
         coordinateTransformer.transform(fromCoordinate, toCoordinate);
         return ResponseFactory.getResponse(to, toCoordinate.x, toCoordinate.y);
