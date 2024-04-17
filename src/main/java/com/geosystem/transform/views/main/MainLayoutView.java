@@ -7,6 +7,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -32,13 +33,17 @@ public class MainLayoutView extends AppLayout {
                 LumoUtility.FontSize.LARGE,
                 LumoUtility.Margin.MEDIUM,
                 "logo-text");
+        H5 h5 = new H5("To add support for new coordinate system contact geotransform@gmail.com");
+        h5.addClassNames(
+                LumoUtility.FontSize.LARGE,
+                LumoUtility.Margin.MEDIUM);
 
 
-        var header = new HorizontalLayout(new DrawerToggle(), logo, h1);
+        var header = new HorizontalLayout(new DrawerToggle(), logo, h1, h5);
         header.getStyle().set("background-color", "#a6ffd4");
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.setWidthFull();
-        header.expand(h1);
+        header.expand(h1, h5);
         header.addClassNames(
                 LumoUtility.Padding.Vertical.NONE,
                 LumoUtility.Padding.Horizontal.MEDIUM);

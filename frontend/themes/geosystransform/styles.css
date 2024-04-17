@@ -28,5 +28,5 @@ a[highlight] {
 }
 
 .invalid-upload {
-    border: 1px solid red; /* Example style indicating invalid state */
+    border: 1px solid red;
 }
