@@ -86,7 +86,7 @@ public class CoordinatesEditorView extends VerticalLayout {
         customMarkerPanel.add(latInput, lonInput, updateButton);
         HorizontalLayout uploadLayout = getUploadFileLayout();
 
-        inputType.setItems(CoordinateType.WGS.name(), CoordinateType.LKS.name());
+        inputType.setItems(CoordinateType.getCoordinateSystemNames());
         addMarkersButton.getStyle().set("margin-top", "36px");
         addMarkersButtonListener(map);
         uploadLayout.add(upload, inputType, addMarkersButton);

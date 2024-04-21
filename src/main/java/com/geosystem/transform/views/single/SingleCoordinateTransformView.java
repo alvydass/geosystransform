@@ -48,9 +48,9 @@ public class SingleCoordinateTransformView extends VerticalLayout {
         HorizontalLayout inputLayout = new HorizontalLayout();
         inputLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
         convertButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        inputType.setItems(CoordinateType.WGS.name(), CoordinateType.LKS.name());
+        inputType.setItems(CoordinateType.getCoordinateSystemNames());
         inputType.addValueChangeListener(event -> updatePlaceholders());
-        destinationType.setItems(CoordinateType.WGS.name(), CoordinateType.LKS.name());
+        destinationType.setItems(CoordinateType.getCoordinateSystemNames());
         inputLayout.add(inputType, latCoordinateInput, lonCoordinateInput, destinationType, convertButton);
 
         HorizontalLayout outputLayout = new HorizontalLayout();

@@ -6,11 +6,18 @@ public class InputDataHelperFactory {
 
     public static InputDataHelper getHelper(String cordSystem) {
         CoordinateType mimeType = CoordinateType.valueOf(cordSystem);
-        switch (mimeType) {
-            case WGS: return new WgsInputDataHelper();
-            case LKS: return new LksInputDataHelper();
-            default:
-                throw new IllegalArgumentException("Unsupported file type for file: " + cordSystem);
-        }
+        return switch (mimeType) {
+            case WGS -> new WgsInputDataHelper();
+            case LKS -> new LksInputDataHelper();
+            case NAD -> new NadInputDataHelper();
+            case ETRS -> new EtrsCoordinateHelper();
+            case SIRGAS -> new SirgasCoordinateHelper();
+            case GDA -> new GdaCoordinateHelper();
+            case JGD -> new JgdCoordinateHelper();
+            case PZ90 -> new Pz90CoordinateHelper();
+            case CGCS2019 -> new CgcsCoordinateHelper();
+            case HARTEBEESTHOEK -> new HartebeetCoordinateHelper();
+            default -> throw new IllegalArgumentException("Unsupported file type for file: " + cordSystem);
+        };
     }
 }

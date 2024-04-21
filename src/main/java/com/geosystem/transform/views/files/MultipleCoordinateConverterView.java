@@ -50,8 +50,8 @@ public class MultipleCoordinateConverterView extends VerticalLayout {
         H1 logo = new H1("File Coordinate Converter");
         addClassName("multiple-coordinate-view");
 
-        inputType.setItems(CoordinateType.WGS.name(), CoordinateType.LKS.name());
-        destinationType.setItems(CoordinateType.WGS.name(), CoordinateType.LKS.name());
+        inputType.setItems(CoordinateType.getCoordinateSystemNames());
+        destinationType.setItems(CoordinateType.getCoordinateSystemNames());
         destinationFileType.setItems(FileType.CSV.name(), FileType.KML.name(), FileType.JSON.name());
 
         HorizontalLayout typesLayout = new HorizontalLayout();
