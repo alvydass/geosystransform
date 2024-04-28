@@ -14,12 +14,14 @@ public class LksCoordinate implements CoordinateWrapper {
 
     @Override
     public String getAval() {
-        return String.valueOf(coordinate.getLatitude());
+        int latitude = (int) coordinate.getLatitude();
+        return String.valueOf(latitude);
     }
 
     @Override
     public String getBval() {
-        return String.valueOf(coordinate.getLongitude());
+        int longitude = (int) coordinate.getLongitude();
+        return String.valueOf(longitude);
     }
 
     @Override

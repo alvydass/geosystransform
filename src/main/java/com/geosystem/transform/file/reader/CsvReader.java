@@ -26,7 +26,7 @@ public class CsvReader implements CoordinateFileReader {
                 double longitude = Double.parseDouble(parts[1]);
                 coordinates.add(Coordinate.of(latitude, longitude));
             }
-        } catch (IOException | CsvException e) {
+        } catch (IOException | CsvException | NumberFormatException e) {
             throw new CoordinateReadException("Failed to read csv file because " + e.getMessage(), e);
         }
 
