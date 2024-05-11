@@ -33,7 +33,7 @@ public class MainLayoutView extends AppLayout {
                 LumoUtility.FontSize.LARGE,
                 LumoUtility.Margin.MEDIUM,
                 "logo-text");
-        H5 h5 = new H5("To add support for new coordinate system contact geotransform@gmail.com");
+        H5 h5 = new H5("To add support for new coordinate system contact geotransformservice@gmail.com");
         h5.addClassNames(
                 LumoUtility.FontSize.LARGE,
                 LumoUtility.Margin.MEDIUM);
