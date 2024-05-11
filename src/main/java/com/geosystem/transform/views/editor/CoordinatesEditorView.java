@@ -7,6 +7,7 @@ import com.geosystem.transform.file.reader.CoordinateFileReader;
 import com.geosystem.transform.file.reader.FileReaderFactory;
 import com.geosystem.transform.views.main.MainLayoutView;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H1;
@@ -34,6 +35,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import static com.geosystem.transform.views.files.MultipleCoordinateConverterView.getJsonCOntentExample;
+import static com.geosystem.transform.views.files.MultipleCoordinateConverterView.getKmlCOntentExample;
+
 @Route(value = "editor", layout = MainLayoutView.class)
 @PageTitle("Interactive Map")
 public class CoordinatesEditorView extends VerticalLayout {
@@ -55,6 +59,8 @@ public class CoordinatesEditorView extends VerticalLayout {
     private ComboBox<String> inputType = new ComboBox<>("Coordinate Type");
 
     private final CoordinateConverter converter;
+    private Accordion accordion = new Accordion();
+
 
 
     public CoordinatesEditorView(CoordinateConverter converter) throws URISyntaxException {
@@ -96,7 +102,14 @@ public class CoordinatesEditorView extends VerticalLayout {
 
         clearMarkersButton.getStyle().set("margin-top", "44px");
         clearMarkersButton.addClickListener(listener -> clearMarkers(map));
-        add(logo, fileAndMarker, new Text("Supported file formats: CSV, GeoJSON, KML"), coordinatesSpan, map);
+        VerticalLayout kmlLayout = getKmlCOntentExample();
+
+        VerticalLayout jsonLayout = getJsonCOntentExample();
+
+        accordion.add("Kml format example", kmlLayout);
+        accordion.add("Json format example", jsonLayout);
+        accordion.close();
+        add(logo, fileAndMarker, new Text("Supported file formats: CSV, GeoJSON, KML"), accordion,  coordinatesSpan, map);
     }
 
     private void addMarkersButtonListener(MapLibre map) {

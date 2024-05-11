@@ -4,11 +4,11 @@ import com.geosystem.transform.converter.FileConverter;
 import com.geosystem.transform.enums.CoordinateType;
 import com.geosystem.transform.file.FileType;
 import com.geosystem.transform.views.main.MainLayoutView;
+import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -20,6 +20,7 @@ import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.util.Objects;
@@ -42,10 +43,9 @@ public class MultipleCoordinateConverterView extends VerticalLayout {
 
     private Button downloadButton =  new Button("Download file", new Icon(VaadinIcon.DOWNLOAD));
 
-    private final FileConverter fileConverter;
+    private Accordion accordion = new Accordion();
 
     public MultipleCoordinateConverterView(FileConverter fileConverter) {
-        this.fileConverter = fileConverter;
 
         H1 logo = new H1("File Coordinate Converter");
         addClassName("multiple-coordinate-view");
@@ -111,7 +111,63 @@ public class MultipleCoordinateConverterView extends VerticalLayout {
             downloadLink.setEnabled(true);
         });
 
-        add(logo, upload, typesLayout, sameFileTypeLayout, convertButton, downloadLink);
+        VerticalLayout kmlLayout = getKmlCOntentExample();
+
+        VerticalLayout jsonLayout = getJsonCOntentExample();
+
+        accordion.add("Kml format example", kmlLayout);
+        accordion.add("Json format example", jsonLayout);
+        accordion.close();
+        add(logo, upload, typesLayout, sameFileTypeLayout, convertButton, downloadLink, accordion);
+    }
+
+    @NotNull
+    public static VerticalLayout getJsonCOntentExample() {
+        Div jsonContentDiv = new Div();
+        jsonContentDiv.getElement().setProperty("innerHTML",
+                "{<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;\"type\": \"FeatureCollection\",<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;\"features\": [<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"type\": \"Feature\",<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"properties\": {},<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"geometry\": {<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"type\": \"Point\",<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"coordinates\": [<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;25.282911,<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;54.687046<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;]<br>" +
+                        "}"
+        );
+
+        VerticalLayout jsonLayout = new VerticalLayout(jsonContentDiv);
+        jsonLayout.setSpacing(false);
+        jsonLayout.setPadding(false);
+        return jsonLayout;
+    }
+
+    @NotNull
+    public static VerticalLayout getKmlCOntentExample() {
+        Div kmlContentDiv = new Div();
+        kmlContentDiv.getElement().setProperty("innerHTML",
+                "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;<br>" +
+                        "&lt;kml xmlns=\"http://www.opengis.net/kml/2.2\"&gt;<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&lt;Document&gt;<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Placemark&gt;<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Point&gt;<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;coordinates&gt;25.282911,54.687046&lt;/coordinates&gt;<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Point&gt;<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Placemark&gt;<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Document&gt;<br>" +
+                        "&lt;/kml&gt;"
+        );
+        VerticalLayout kmlLayout = new VerticalLayout(kmlContentDiv);
+        kmlLayout.setSpacing(false);
+        kmlLayout.setPadding(false);
+        return kmlLayout;
     }
 
     private void markEmptyComponents() {
