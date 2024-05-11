@@ -24,11 +24,16 @@ public class KmlReader implements CoordinateFileReader {
             Kml kml = (Kml) u.unmarshal(fileStream);
 
             Feature feature = kml.getFeature();
-            if (feature instanceof Placemark placemark) {
-                Geometry geometry = placemark.getGeometry();
-                if (geometry instanceof Point point) {
-                    List<de.micromata.opengis.kml.v_2_2_0.Coordinate> kmlCoordinates = point.getCoordinates();
-                    coordinates.addAll(mapCoordinates(kmlCoordinates));
+            if (feature instanceof Document) {
+                List<Feature> placemarks = ((Document) feature).getFeature();
+                for (Feature featurePlacemark : placemarks) {
+                    if (featurePlacemark instanceof Placemark) {
+                        Geometry geometry = ((Placemark) featurePlacemark).getGeometry();
+                        if (geometry instanceof Point point) {
+                            List<de.micromata.opengis.kml.v_2_2_0.Coordinate> kmlCoordinates = point.getCoordinates();
+                            coordinates.addAll(mapCoordinates(kmlCoordinates));
+                        }
+                    }
                 }
             }
         } catch (JAXBException e) {

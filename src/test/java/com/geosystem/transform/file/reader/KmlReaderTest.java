@@ -17,16 +17,15 @@ public class KmlReaderTest {
 
     @Test
     public void testReadValidKmlFile() {
-        // Prepare a KML file content with one coordinate
         String kmlContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n" +
-                "    <Placemark>\n" +
-                "        <name></name>\n" +
-                "        <description></description>\n" +
-                "        <Point>\n" +
-                "            <coordinates>24.743957519531254,55.61132323643337,0</coordinates>\n" +
-                "        </Point>\n" +
-                "    </Placemark>\n" +
+                "    <Document>\n" +
+                "        <Placemark>\n" +
+                "            <Point>\n" +
+                "                <coordinates>24.743957519531254,55.61132323643337</coordinates>\n" +
+                "            </Point>\n" +
+                "        </Placemark>\n" +
+                "    </Document>\n" +
                 "</kml>";
         InputStream fileStream = new ByteArrayInputStream(kmlContent.getBytes());
 
