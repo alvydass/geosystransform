@@ -11,6 +11,7 @@ import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -21,8 +22,6 @@ import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.Command;
-import com.vaadin.flow.server.VaadinSession;
 import org.locationtech.jts.geom.Coordinate;
 import org.vaadin.addons.maplibre.MapLibre;
 import org.vaadin.addons.maplibre.Marker;
@@ -59,8 +58,6 @@ public class CoordinatesEditorView extends VerticalLayout {
     private ComboBox<String> inputType = new ComboBox<>("Coordinate Type");
 
     private final CoordinateConverter converter;
-    private Accordion accordion = new Accordion();
-
 
 
     public CoordinatesEditorView(CoordinateConverter converter) throws URISyntaxException {
@@ -68,7 +65,7 @@ public class CoordinatesEditorView extends VerticalLayout {
         H1 logo = new H1("Interactive map");
         addClassName("coordinates-editor-view");
         setDefaultHorizontalComponentAlignment(Alignment.AUTO);
-        upload.setAcceptedFileTypes("text/csv", "application/json");
+        upload.setAcceptedFileTypes("text/csv");
         upload.setMaxFiles(1);
 
         MapLibre map = new MapLibre(new URI("https://api.maptiler.com/maps/streets/style.json?key=klhvW36HyHrDRHEaCYeH"));
@@ -102,14 +99,9 @@ public class CoordinatesEditorView extends VerticalLayout {
 
         clearMarkersButton.getStyle().set("margin-top", "44px");
         clearMarkersButton.addClickListener(listener -> clearMarkers(map));
-        VerticalLayout kmlLayout = getKmlCOntentExample();
-
-        VerticalLayout jsonLayout = getJsonCOntentExample();
-
-        accordion.add("Kml format example", kmlLayout);
-        accordion.add("Json format example", jsonLayout);
-        accordion.close();
-        add(logo, fileAndMarker, new Text("Supported file formats: CSV, GeoJSON, KML"), accordion,  coordinatesSpan, map);
+        Paragraph text = new Paragraph("Supported file formats: CSV");
+        text.getStyle().set("font-size", "13px");
+        add(logo, fileAndMarker, text,  coordinatesSpan, map);
     }
 
     private void addMarkersButtonListener(MapLibre map) {
