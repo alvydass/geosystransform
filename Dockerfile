@@ -1,26 +1,31 @@
-# Start with a base image containing Java runtime
+# Use an official Maven image to build the application
+FROM maven:3.8.5-openjdk-17 AS build
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the pom.xml file and download the project dependencies
+COPY pom.xml .
+
+RUN mvn dependency:go-offline
+
+# Copy the entire project source into the working directory
+COPY src ./src
+
+# Package the application
+RUN mvn clean package -DskipTests
+
+# Use an official OpenJDK runtime as a parent image
 FROM openjdk:17-jdk-slim
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the project's pom.xml and download project dependencies (layer caching)
-COPY pom.xml .
-COPY .mvn .mvn
-COPY mvnw .
-RUN ./mvnw dependency:go-offline -B
+# Copy the JAR file from the previous build stage
+COPY --from=build /app/target/transform-0.0.1-SNAPSHOT.jar /app/transform-0.0.1-SNAPSHOT.jar
 
-# Copy the project source code
-COPY src ./src
-
-# Build the project
-RUN ./mvnw package -DskipTests
-
-# Copy the built jar file to the working directory
-COPY target/transform-0.0.1-SNAPSHOT.jar app.jar
-
-# Expose the port the application will run on
+# Expose port 8080
 EXPOSE 8080
 
-# Define the command to run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the JAR file
+ENTRYPOINT ["java", "-jar", "/app/transform-0.0.1-SNAPSHOT.jar"]
