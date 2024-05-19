@@ -127,8 +127,8 @@
 	<profiles>
 		<profile>
 			<id>production</id>
-			<dependencies>
-				<!-- Exclude development dependencies from production -->
+			<!--<dependencies>
+				&lt;!&ndash; Exclude development dependencies from production &ndash;&gt;
 				<dependency>
 					<groupId>com.vaadin</groupId>
 					<artifactId>vaadin-core</artifactId>
@@ -139,7 +139,7 @@
 						</exclusion>
 					</exclusions>
 				</dependency>
-			</dependencies>
+			</dependencies>-->
 			<build>
 				<plugins>
 					<plugin>
