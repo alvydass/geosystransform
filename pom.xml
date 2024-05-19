@@ -103,11 +103,6 @@
 		<defaultGoal>spring-boot:run</defaultGoal>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-
-			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>
 				<version>${vaadin.version}</version>
@@ -129,6 +124,14 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.heroku.sdk</groupId>
+				<artifactId>heroku-maven-plugin</artifactId>
+				<version>3.0.7</version>
+				<configuration>
+					<appName>geotransform</appName>
 				</configuration>
 			</plugin>
 		</plugins>
