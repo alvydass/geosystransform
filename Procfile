@@ -1,0 +1,1 @@
+web: java -Dserver.port=$PORT -Dvaadin.productionMode=true -jar target/transform-0.0.1-SNAPSHOT.jar
