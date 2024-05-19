@@ -103,21 +103,24 @@
 		<defaultGoal>spring-boot:run</defaultGoal>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-
-			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>
 				<version>${vaadin.version}</version>
 				<executions>
 					<execution>
 						<goals>
-							<goal>prepare-frontend</goal>
+							<goal>build-frontend</goal>
 						</goals>
+						<phase>compile</phase>
 					</execution>
 				</executions>
+				<configuration>
+					<!-- To always force an optimized production bundle build set this configuration to 'true' -->
+					<!-- To possibly use the pre-compiled production bundle remove or set to 'false' -->
+					<forceProductionBuild>true</forceProductionBuild>
+					<!-- To have reproducible build by running 'npm ci' -->
+					<ciBuild>true</ciBuild>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -140,6 +143,10 @@
 			<id>production</id>
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+					</plugin>
 					<plugin>
 						<groupId>com.vaadin</groupId>
 						<artifactId>vaadin-maven-plugin</artifactId>
