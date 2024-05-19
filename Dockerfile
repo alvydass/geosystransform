@@ -17,7 +17,7 @@ COPY src ./src
 RUN ./mvnw package -DskipTests
 
 # Copy the built jar file to the working directory
-COPY target/*.jar app.jar
+COPY target/transform-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port the application will run on
 EXPOSE 8080
