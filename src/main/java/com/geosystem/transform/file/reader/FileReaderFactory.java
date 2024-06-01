@@ -11,12 +11,11 @@ public class FileReaderFactory {
 
     public static CoordinateFileReader getReader(String fileName) {
         FileType mimeType = FileType.valueOf(StringUtils.toRootUpperCase(FileNameUtils.getExtension(fileName)));
-        switch (mimeType) {
-            case CSV: return new CsvReader();
-            case JSON: return new GeoJsonReader();
-            case KML: return new KmlReader();
-            default:
-                throw new IllegalArgumentException("Unsupported file type for file: " + fileName);
-        }
+        return switch (mimeType) {
+            case CSV -> new CsvReader();
+            case JSON -> new GeoJsonReader();
+            case KML -> new KmlReader();
+            default -> throw new IllegalArgumentException("Unsupported file type for file: " + fileName);
+        };
     }
 }
